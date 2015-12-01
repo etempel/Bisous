@@ -53,8 +53,8 @@ contains
 		logical,parameter:: makedirs=.false.
         character(len=:),allocatable:: fileout,filein
 		! jargnevad kaks rida on kaspari jaoks
-		character(len=*),parameter:: root='/Users/elmo/Saienss/boris_clusters/results/'
-		character(len=*),parameter:: output='/Users/elmo/Saienss/boris_clusters/visual/vmap3/'
+		character(len=*),parameter:: root='/Volumes/wrk/bolshoi/test/'
+		character(len=*),parameter:: output='/Volumes/wrk/bolshoi/visual/vmap/'
 		!character(len=*),parameter:: root='/Users/elmo/Saienss/bisous/test_near2/'
 		!character(len=*),parameter:: output='/Users/elmo/Saienss/bisous/test_near2/'
 		!
@@ -75,7 +75,7 @@ contains
 			!if (makedirs) call system('mkdir '//dirout)
 			print*, "generating run: ", irun
 			!
-			do k=200,500,1
+			do k=1,3,1
 				!
 				filein=dir//get_file_counter(k, cfile_number_spaces)//'.cyl'
 				fileout=dirout//'/cyls_'//get_file_counter(k, cfile_number_spaces)//'.txt'

@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date (last changed): 22.04.2015
+! Date (last changed): 10.11.2015
 !============
 !
 program bisous_model
@@ -29,13 +29,38 @@ program bisous_model
 		call start_program_bisous_simulation(c_resume)
 		!==============
 		case (2) ! post processing
-		!call convert_cyl_files_to_ascii_v2()
-		call read_cylinders_from_realisations()
-		!call test_post_processing()
-		call extract_filament_spines()
-		call write_basic_catalogue_to_file('test_filament_spines.txt')
+		select case (c_analyse_option)
+			case (0) ! test subroutines
+			print*, "============  TEMPORARY SUBROUTINES ============="
+			call convert_cyl_files_to_ascii_v2()
+			!call test_bolshoi_visitmap_movie()
+			!call test_post_processing_bolshoi()
+			case (1) ! extract filament spines
+			call read_cylinders_from_realisations()
+			call extract_filament_spines()
+			call write_basic_catalogue_to_file(c_output_spines//'points.txt')
+			case (2) ! calc filament statistics for input points
+			call read_cylinders_from_realisations()
+			call calc_filament_statistics_for_input_points(c_input_points, c_output_points//'bisous.txt')
+			! jargnev on plancki jaoks bolshoi arvutused
+			!call test_bolshoi_visitmap_movie()
+			!------------------------------------------------
+			!--- test cases
+			!------------------------------------------------
+			case (101) ! convert raw data for plotting
+			call read_cylinders_from_realisations()
+			call write_cylinders_information_for_3d_plotting('/Volumes/wrk/bolshoi/cylplot/snap001')
+			!------------------------------------------------
+			case (-1) ! convert raw data for validation
+			call read_cylinders_from_realisations()
+			call write_cylinders_information_for_validation(c_output_general//'cylinders.txt')
+			!call calc_filament_statistics_for_input_points(fname_data, fname_data(1:len_trim(fname_data)-4)//'_bisous_stats.txt')
+			!call read_filament_catalogue_from_file(c_output_spines//'points.txt')
+			!call calc_spine_statistics_for_input_points(fname_data, fname_data(1:len_trim(fname_data)-4)//'_bisous_spine.txt')
+			case default; stop "ERROR: program main option not defined!"
+		end select
 		!==============
-		case default; stop "ERROR: program action is not defined!"
+		case default; stop "ERROR: program option is not defined!"
 	end select
     !
 contains

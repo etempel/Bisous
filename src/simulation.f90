@@ -15,6 +15,7 @@ module simulation
 	use utilities
 	use preparation
 	implicit none
+	integer,parameter,private:: c_max_nr_moves_multiplier=10 ! maksimaalne movede arv yhes iteratsioonis (times ncylsize)
 	real(rk),private:: t_delta_max
 	type, private :: simtemp_type
 		real(rk),dimension(:),allocatable:: stemp ! ST temperature ning data energy
@@ -109,7 +110,20 @@ contains
 			read(iunit_stat,fmt=*)
 			do i=1,nline
 				read(iunit_stat,fmt=*) interrupt
+				if (c_resume_from_previous_snapshot .and. interrupt>st%annealing_start) then
+					! start simulation from previous snapshot
+					j=i
+					exit
+				end if
 			end do
+			! set some parameters that are needed for new simulation
+			if (c_resume_from_previous_snapshot) then
+				nline=j
+				print*, "Start new simulation from previous snapshot..."
+				st%avg_pot=st%avg_pot/st%avg_cnt
+				st%avg_sig=st%avg_sig/st%avg_cnt
+				st%avg_cnt=1
+			end if
 			! -- do something nasty to be compatible with KBFI computing centre
 			if (.true.) then
 				close(iunit_stat)
@@ -199,6 +213,8 @@ contains
 			!
 			! run one mcmc cyle
 			nn_moves=max(cmcmc_cycle_moves,int( st%ncylsize*cmcmc_nr_moves_min_frac_con ))
+			nn_moves=min(nn_moves,st%ncylsize*c_max_nr_moves_multiplier)
+			nn_moves=max(nn_moves,cmcmc_cycle_moves/10) ! vahemalt 1/10 esialgsetest movedest
             call run_one_mcmc_cycle(nn_moves,temp)
 			call get_nr_of_connections(n0,n1,n2,pdat,psig=psig) ! needed for set temperatures and automatic variables
 			!
@@ -526,11 +542,13 @@ contains
 		implicit none
 		character(len=:),allocatable:: filename
 		integer,intent(out):: nline
-		integer:: iunit,nn_active,nn_fixed,i,n
+		integer:: iunit,nn_active,nn_fixed,i,n,ii
 		logical,intent(out):: suc
 		integer:: ierr,stepold
 		type(cylinder):: cyl
 		type(simtemp_type),intent(inout):: st
+		!
+		print*, "read resume file..."
 		!
 		stepold=cmcmc_st_temp_steps
 		filename=c_root//'resume.bin'
@@ -541,22 +559,28 @@ contains
 		end if
 		suc=.true.
 		read(iunit) nn_active,nn_fixed,nline
-		n=0
+		n=0; i=0
 		!
-		do i=1,nn_active+nn_fixed
+		do ii=1,nn_active+nn_fixed
             read(iunit) cyl%fixed, cyl%p,cyl%t,cyl%u,cyl%h,cyl%r,cyl%rmin,cyl%rmax,&
             cyl%nr_con,cyl%nr_of_death, cyl%nr_of_change, cyl%nr_of_change_accept
 			!
 			call update_cyl_automatic_params(cyl)
 			call update_potential_for_cylinder(cyl)
-			nr_cylarr=i
-			call add_cylinder_to_array(cyl,i,old=.true.,fixed=cyl%fixed)
-			if (.not.cylarr(i)%inuse) stop "Err: resume failed from single file!"
+			!print*, i,cyl%nr_con,cyl%potdata,cyl%potint,cyl%ngal
+			if (cyl%potdata<cdata_pot_undefined) then
+				i=i+1
+				nr_cylarr=i
+				call add_cylinder_to_array(cyl,i,old=.true.,fixed=cyl%fixed)
+				if (.not.cylarr(i)%inuse) stop "Err: resume failed from single file!"
+			end if
 			!
 			n=n+1
 		end do
 		if (n/=nn_active+nn_fixed) stop "Error: resume unsuccessful (0)!"
-		if (nn_active/=nr_cylarr_active .or. nn_fixed/=nr_cylarr_fixed) stop "Error: resume unsuccessful (1)!"
+		if (.not.c_resume_from_previous_snapshot) then ! see test ei ole alati vajalik
+			!if (nn_active/=nr_cylarr_active .or. nn_fixed/=nr_cylarr_fixed) stop "Error: resume unsuccessful (1)!"
+		end if
 		!
 		! read simulated tempering parameters
 		read(iunit) cmcmc_st_temp_steps,st%ii,st%ii_min,st%ii_max

@@ -1,14 +1,14 @@
 ######################################################
 # Makefile for Fortran programs
 #  Author: Elmo Tempel
-#  Last chaged: (23.04.2015)
+#  Last chaged: (09.02.2015)
 #####################################################
 
 # increase stack size: ulimit -s 65532
 # ulimit -s shows the current stack size
 
 # Fortran source files and program name:
-PROG = bisous_model
+PROG = bisous_public
 # object files
 OBJ = program.o constants.o parameters.o cylinders.o cubesort.o quicksort.o \
       galaxies.o utilities.o data_term.o interaction_term.o config.o \
@@ -19,12 +19,12 @@ FC = ifort
 OPT = -xHost -O3 -ipo #-profile-loops=all -profile-loops-report=2 #-profile-functions
 DBG = -g -O0 -error-limit 10 -warn all
 OMP = #-openmp  # -openmp-stubs -openmp-threadprivate
-LIBS =  -lcfitsio -lrecipes_f90 # -lnest3 -llapack
+LIBS =  -lcfitsio #-lrecipes_f90 # -lnest3 -llapack
 # choose flags for compiler
 FLAGS = $(OPT) $(OMP) $(LIBS)
 
 # Variable declaration (system directories):
-DIR_INSTALL = ./
+DIR_INSTALL = ~/usr/bin
 DIR_SRC = ./src
 
 all: $(PROG)

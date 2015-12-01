@@ -13,14 +13,15 @@ contains
 	!
 	! incomplete beta function
 	function betainc(a,b,p) result(res)
-		use nr, only: betai
+		!use nr, only: betai
 		implicit none
 		real(rk):: res
 		real(rk),intent(in):: a,b,p
 		if (a<=0.0) then
 			res=1.0
 		else
-			res = betai(real(a),real(b),real(p))
+			stop "ei ole incomplete beta funktsiooni!"
+			!res = betai(real(a),real(b),real(p))
 		end if
 	end function betainc
 	!

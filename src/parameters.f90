@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date (last changed): 02.04.2015
+! Date (last changed): 10.11.2015
 !============
 !
 module parameters
@@ -21,9 +21,11 @@ module parameters
 	integer:: c_cylarr_size ! max size of cylarr. Memory is allocated for these cylinders
 	!
 	integer:: c_input_type, c_main_option ! input filetype and action to be carried out
+	integer:: c_analyse_option ! input option for analyse (c_main_option=2)
 	character(len=:),allocatable:: fname_data
 	real(rk):: c_dummy_1
 	logical:: c_resume ! resume previously interrupted simulation (from resume file)
+	logical:: c_resume_from_previous_snapshot ! start simulation using previous snapshot resume file
 	logical:: c_verbose ! output
 	!
 	! mcmc parameters
@@ -97,7 +99,7 @@ module parameters
 	!... e.g. useful for periodic box... however, does not use real periodiciy
 	!
 	! parameters for post processing
-	character(len=:),allocatable:: craw_root_dir, craw_root_dir_run
+	character(len=:),allocatable:: craw_root_dir, craw_file_prefix, craw_root_dir_run
 	logical:: craw_multiple_runs, craw_old_format
 	integer:: craw_run_first,craw_run_last,craw_rs_first,craw_rs_last,craw_rs_every
 	real(rk):: craw_weight_0,craw_weight_1,craw_weight_2 ! weights for 0,1,2 connected cylinders
@@ -110,6 +112,7 @@ module parameters
 	real(rk):: craw_spine_min_ori_strength ! min orientation strength 0..1
 	integer:: craw_max_nr_of_fil_spines, craw_max_nr_of_fil_points
 	real(rk):: craw_spine_spacing_rad_frac, craw_spine_spacing_max
+	character(len=:),allocatable:: c_output_spines, c_output_points, c_output_general, c_input_points ! root and file beginning of output spines
 	!
 	! testing parameters
 	logical:: ctest_constant_dataterm ! use constant dataterm
@@ -146,6 +149,7 @@ contains
 		call get_conf('general','main_option',c_main_option,1)
 		call get_conf('general','verbose',c_verbose,.true.)
 		call get_conf('general','resume',c_resume,.false.)
+		call get_conf('general','resume_from_previous_snapshot',c_resume_from_previous_snapshot,.false.)
 		call get_conf('general','max_time_hour',ctime_max_time,24.0_rk)
 		call get_conf('general','input_type',c_input_type,1)
 		call get_conf('general','file_data',fname_data)
@@ -236,6 +240,7 @@ contains
 		call get_conf('cmask','c_cmask_pmax_z',c_cmask_pmax(3),0.0_rk)
 		!
 		call get_conf('raw_data','root_dir',craw_root_dir,'results')
+		call get_conf('raw_data','file_prefix',craw_file_prefix,'')
 		call get_conf('raw_data','multiple_runs',craw_multiple_runs,.false.)
 		call get_conf('raw_data','root_dir_run',craw_root_dir_run,'run_000')
 		call get_conf('raw_data','run_first',craw_run_first,1)
@@ -249,6 +254,11 @@ contains
 		call get_conf('raw_data','r_smooth',craw_rsmooth,1.0_rk)
 		call get_conf('raw_data','old_format',craw_old_format,.false.)
 		!
+		call get_conf('analyse','analyse_option',c_analyse_option,0)
+		call get_conf('analyse','output_general',c_output_general,'temp_output_')
+		call get_conf('analyse','output_spines',c_output_spines,'bisousfil_')
+		call get_conf('analyse','input_points',c_input_points,'nofile.txt')
+		call get_conf('analyse','output_points',c_output_points,'bisous_stat_for_pts.txt')
 		call get_conf('analyse','initial_grid_size',craw_spine_initial_dx,1.0_rk)
 		call get_conf('analyse','minimim_visitmap_value',craw_spine_min_visitmap_value,0.05_rk)
 		call get_conf('analyse','spine_location_accuracy',craw_spine_location_acc,0.1_rk)
@@ -361,6 +371,7 @@ contains
 		write(iunit,fmt='(A," = ",I)') 'main_option',c_main_option
 		write(iunit,fmt='(A," = ",L)') 'verbose',c_verbose
 		write(iunit,fmt='(A," = ",L)') 'resume',c_resume
+		write(iunit,fmt='(A," = ",L)') 'resume_from_previous_snapshot',c_resume_from_previous_snapshot
 		write(iunit,fmt='(A," = ",F)') 'max_time_hour',real(ctime_max_time)
 		write(iunit,fmt='(A," = ",I)') 'input_type',c_input_type
 		write(iunit,fmt='(A," = ",A)') 'file_data',fname_data
@@ -466,6 +477,7 @@ contains
 		write(iunit,fmt='(A)') '[raw_data]'
 		write(iunit,fmt=*)
 		write(iunit,fmt='(A," = ",A)') 'root_dir',craw_root_dir
+		write(iunit,fmt='(A," = ",A)') 'file_prefix',craw_file_prefix
 		write(iunit,fmt='(A," = ",L)') 'multiple_runs',craw_multiple_runs
 		write(iunit,fmt='(A," = ",A)') 'root_dir_run',craw_root_dir_run
 		write(iunit,fmt='(A," = ",I)') 'run_first',craw_run_first
@@ -481,6 +493,11 @@ contains
 		!
 		write(iunit,fmt='(A)') '[analyse]'
 		write(iunit,fmt=*)
+		write(iunit,fmt='(A," = ",A)') 'analyse_option',c_analyse_option
+		write(iunit,fmt='(A," = ",A)') 'output_general',c_output_general
+		write(iunit,fmt='(A," = ",A)') 'output_spines',c_output_spines
+		write(iunit,fmt='(A," = ",A)') 'input_points',c_input_points
+		write(iunit,fmt='(A," = ",A)') 'output_points',c_output_points
 		write(iunit,fmt='(A," = ",F)') 'initial_grid_size',real(craw_spine_initial_dx)
 		write(iunit,fmt='(A," = ",F)') 'minimim_visitmap_value',real(craw_spine_min_visitmap_value)
 		write(iunit,fmt='(A," = ",F)') 'spine_location_accuracy',real(craw_spine_location_acc)

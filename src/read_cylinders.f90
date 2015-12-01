@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date: 10.02.2015
+! Date: 11.11.2015
 !============
 !
 module read_cylinders
@@ -29,6 +29,56 @@ module read_cylinders
 	!
 contains
 	!
+	! subroutine to write binary data for plotting in processing
+	subroutine write_cylinders_information_for_3d_plotting(dirout)
+		implicit none
+		character(len=*),intent(in):: dirout
+		integer:: i,iunit,k
+		print*, "Write data for plotting: ", dirout
+		do i=1,nrun
+			open(newunit=iunit,file=dirout//'/cyls_bin_'//get_file_counter(i, 5)//'.cyl', form='BINARY')
+			!open(55,file='testcyl.txt')
+			write(iunit) run(i)%nrcyl
+			!write(55,fmt=*) run(i)%nrcyl
+			do k=1,run(i)%nrcyl
+				write(iunit) real(run(i)%cyl(k)%p(1:3)),real(run(i)%cyl(k)%u),real(run(i)%cyl(k)%t),&
+				real(run(i)%cyl(k)%h),real(run(i)%cyl(k)%r),run(i)%cyl(k)%nr_con
+				!write(55,fmt='(7F8.3,I3)') run(i)%cyl(k)%p(1:3),run(i)%cyl(k)%u,run(i)%cyl(k)%t,run(i)%cyl(k)%h,run(i)%cyl(k)%r,run(i)%cyl(k)%nr_con
+			end do
+			!close(55)
+			close(iunit)
+			!print*, "done yks"; read*
+		end do
+		print*, "done writing data for output!", nrun
+	end subroutine write_cylinders_information_for_3d_plotting
+	!
+	subroutine write_cylinders_information_for_validation(fnameout)
+		implicit none
+		character(len=*),intent(in):: fnameout
+		integer:: i,iunit,k,cnt
+		type(cylinder):: cyl0
+		print*, "Write data for validation: ", fnameout
+		open(newunit=iunit,file=fnameout)
+		write(iunit,fmt='(A)') '# x y z u t h r nrcon pot_hyp pot_con pot_hyp_local pot_hyp_uniform ngal'
+		cnt=0
+		do i=1,nrun
+			do k=1,run(i)%nrcyl
+				cyl0%p=run(i)%cyl(k)%p
+				cyl0%t=run(i)%cyl(k)%t; cyl0%u=run(i)%cyl(k)%u
+				cyl0%h=run(i)%cyl(k)%h; cyl0%r=run(i)%cyl(k)%r
+				cyl0%rmin=run(i)%cyl(k)%r; cyl0%rmax=run(i)%cyl(k)%r
+				call update_cyl_automatic_params(cyl0)
+				call update_potential_for_cylinder(cyl0,only_datapot=.true.)
+				write(iunit,fmt='(3F13.5,4F9.5,I3,4F10.5,I6)') run(i)%cyl(k)%p(1:3),run(i)%cyl(k)%u,run(i)%cyl(k)%t,run(i)%cyl(k)%h,run(i)%cyl(k)%r,&
+				run(i)%cyl(k)%nr_con,cyl0%pot_hyp*cdata_coeff_hypothesis,cyl0%pot_con*cdata_coeff_variance,cyl0%potarr(1:2)*cdata_coeff_hypothesis,cyl0%ngal
+				cnt=cnt+1
+			end do
+		end do
+		close(iunit)
+		print*, "Total nr of cylinders: ", cnt
+		print*, "done writing data for validation output!", nrun
+	end subroutine write_cylinders_information_for_validation
+	!
 	!
     subroutine read_cylinders_from_realisations()
         implicit none
@@ -50,14 +100,14 @@ contains
 			if (craw_multiple_runs) then
 				print*, "tot: ", craw_run_last, " run: ", k
 				select case(k)
-					case (1:9); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-1)//get_file_counter(k, 1)//'/bm_zyls_'
-					case (10:99); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-2)//get_file_counter(k, 2)//'/bm_zyls_'
-					case (100:999); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-3)//get_file_counter(k, 3)//'/bm_zyls_'
-					case (1000:9999); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-4)//get_file_counter(k, 4)//'/bm_zyls_'
+					case (1:9); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-1)//get_file_counter(k, 1)//'/'//craw_file_prefix//'zyls_'
+					case (10:99); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-2)//get_file_counter(k, 2)//'/'//craw_file_prefix//'zyls_'
+					case (100:999); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-3)//get_file_counter(k, 3)//'/'//craw_file_prefix//'zyls_'
+					case (1000:9999); dir=craw_root_dir//'/'//craw_root_dir_run(1:len(craw_root_dir_run)-4)//get_file_counter(k, 4)//'/'//craw_file_prefix//'zyls_'
 					case default; stop "ERR: run number too large!"
 				end select
 			else
-				dir=craw_root_dir//'/bm_zyls_'
+				dir=craw_root_dir//'/'//craw_file_prefix//'zyls_'
 			end if
 			!
 			! cycle over realisations in this run
@@ -85,14 +135,16 @@ contains
 		total_cyls=nc
 		! cylinder datapot statistics
 		print*
-		print*, "DP,hyptest, local,uni: ", real(potarr(1:2)/total_cyls)
-		print*, "DP, hyptest, variance: ", real(sum(potarr(1:2))/total_cyls),real(potarr(3)/total_cyls)
-		print*, "DP, hyptest, variance: ", real(sum(potarr(1:2))/total_cyls)*real(cdata_coeff_hypothesis),&
+		print*, "--- All cylinders ---"
+		print*, "DP-hyptest: local,uniform: ", real(potarr(1:2)/total_cyls)
+		print*, "DP: hyptest - consentrat:  ", real(sum(potarr(1:2))/total_cyls),real(potarr(3)/total_cyls)
+		print*, "DP: hypt - cons (w coef):  ", real(sum(potarr(1:2))/total_cyls)*real(cdata_coeff_hypothesis),&
 		real(potarr(3)/total_cyls)*real(cdata_coeff_variance)
 		print*
-		print*, "DP2,hyptest, local,uni: ", real(potarr2(1:2)/npotarr2)
-		print*, "DP2, hyptest, variance: ", real(sum(potarr2(1:2))/npotarr2),real(potarr2(3)/npotarr2)
-		print*, "DP2, hyptest, variance: ", real(sum(potarr2(1:2))/npotarr2)*real(cdata_coeff_hypothesis),&
+		print*, "--- 2*ngal_min cylinders ---"
+		print*, "DP2-hyptest: local,uniform: ", real(potarr2(1:2)/npotarr2)
+		print*, "DP2: hyptest - consentrat:  ", real(sum(potarr2(1:2))/npotarr2),real(potarr2(3)/npotarr2)
+		print*, "DP2: hypt - cons (w coef):  ", real(sum(potarr2(1:2))/npotarr2)*real(cdata_coeff_hypothesis),&
 		real(potarr2(3)/npotarr2)*real(cdata_coeff_variance)
 		!
 		call init_fast_cyl_finder()
@@ -199,6 +251,7 @@ contains
         integer:: iunit,i,ierr
 		integer:: nn_active,nn_fixed,nline,nn
         ! read cylinders from file
+		!print*, filename
 		open(newunit=iunit,file=filename,form='unformatted',action='READ',iostat=ierr)
 		if (ierr/=0) then
 			suc=.false.

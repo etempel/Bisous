@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date: 22.04.2015
+! Date: 11.11.2015
 !============
 !
 module post_processing
@@ -24,6 +24,45 @@ module post_processing
 	integer,private:: ii_filpts ! cubesort index
 	!
 contains
+	!----- several test, specific and temporary subroutines
+	!
+	subroutine test_bolshoi_visitmap_movie()
+		implicit none
+		real(rk),dimension(1:3):: p,dori
+		real(rk):: vmap,wmap,dstrength
+		integer:: i,j,k
+		real(rk),dimension(1:5):: dum
+		real(rk),dimension(:,:,:),allocatable:: fmap,fstr
+		!
+		print*, "calc boslhoi visitmap movie..."
+		allocate(fmap(1:1250,1:1250,1:11),fstr(1:1250,1:1250,1:11))
+		!
+		!print*, "bolshoi visitmap test...."
+		open(11,file=c_output_spines//'movie.bin',form='unformatted')
+		do i=1,size(fmap,dim=1)
+			!print*, "progress: ", i
+			p(1)=0.1 + (i-1)*0.2_rk
+			do j=1,size(fmap,dim=2)
+				p(2)=0.1 + (j-1)*0.2_rk
+				do k=1,size(fmap,dim=3)
+					p(3)=124.0+(k-1)*0.2_rk
+					!
+					call get_vmap_and_ori_for_point(p,vmap,wmap,dori,dstrength,only_vmap=.false.)
+					!dum(k)=vmap
+					fmap(i,j,k)=vmap/nrun
+					fstr(i,j,k)=dstrength
+				end do
+				!dum=dum/nrun
+				!write(11,fmt='(2F8.2,3F8.5)') p(1:2), dum(3), sum(dum(2:4))/3.0, sum(dum(1:5))/5.0
+			end do
+			!write(11,fmt=*)
+		end do
+		!
+		write(11) size(fmap,dim=1), size(fmap,dim=2), size(fmap,dim=3)
+		write(11) fmap
+		write(11) fstr
+		close(11)
+	end subroutine test_bolshoi_visitmap_movie
 	!
 	subroutine test_post_processing()
 		implicit none
@@ -104,6 +143,107 @@ contains
 		print*, "time ", t2-t1,n
 		stop "end sdss testing"
 	end subroutine test_post_processing_sdss
+	subroutine test_post_processing_pks()
+		implicit none
+		real(rk),dimension(1:3):: p,dori
+		real(rk),dimension(:,:,:),allocatable:: vmap,wmap
+		type(iifast_type),dimension(:,:,:),allocatable:: ic
+		integer:: i,n
+		real(rk):: t1,t2,vm,wm,dst
+		real(rk):: vm0,wm0,dst0,wmax
+		print*, "start testing post processing (pks)..."
+		call cpu_time(t1)
+		n=0
+		vm0=0.0; wm0=0.0; dst0=0.0
+		open(1,file='210215_2dF_PKS2155-304_xyz.txt')
+		open(2,file='pks_bisous_galaxies.txt')
+		write(2,fmt='(A)') '# vis wden dst'
+		!read(1,fmt=*)
+		wmax=0.0
+		do i=1,21471
+			read(1,fmt=*) p
+			!
+			call get_vmap_and_ori_for_point(p,vm,wm,dori,dst)
+			write(2,fmt=*) vm/1000.0,wm/1000.0,dst
+		end do
+		close(1); close(2)
+		call cpu_time(t2)
+		print*, "time ", t2-t1,n
+		stop "end sdss testing"
+	end subroutine test_post_processing_pks
+	!
+	subroutine test_post_processing_bolshoi()
+		implicit none
+		real(rk),dimension(1:3):: p,dori
+		real(rk),dimension(:,:,:),allocatable:: vmap,wmap
+		type(iifast_type),dimension(:,:,:),allocatable:: ic
+		integer:: i,n
+		real(rk):: t1,t2,vm,wm,dst
+		real(rk):: vm0,wm0,dst0,wmax
+		print*, "start testing post processing (bolshoi)..."
+		call cpu_time(t1)
+		n=0
+		vm0=0.0; wm0=0.0; dst0=0.0
+		open(1,file='halos_xyz_sub/halos_sn_1.txt')
+		read(1,fmt=*)
+		open(2,file='bolshoi_bisous_galaxies.txt')
+		write(2,fmt='(A)') '# vis wden dst'
+		wmax=0.0
+		do i=1,1033718
+			read(1,fmt=*) p
+			!
+			call get_vmap_and_ori_for_point(p,vm,wm,dori,dst)
+			write(2,fmt=*) vm/nrun,wm/nrun,dst
+		end do
+		close(1); close(2)
+		call cpu_time(t2)
+		print*, "time ", t2-t1,n
+		stop "end bolshoi testing"
+	end subroutine test_post_processing_bolshoi
+	!
+	!============================================================
+	! ===== siit edasi on subroutined, mis on olulised ning ei ole yhekordsed!
+	!============================================================
+	!
+	subroutine calc_filament_statistics_for_input_points(file_in,file_out)
+		implicit none
+		character(len=*),intent(in):: file_in,file_out
+		integer:: uin,uout ! unit in and out
+		integer:: i,nin,ncnt,ierr
+		real(rk),dimension(1:3):: crd,dori
+		real(rk):: vm,wm,dst
+		print*
+		print*, "Calculate filament statistics for points..."
+		print*, "   Filename: ", file_in
+		open(newunit=uin,file=file_in, status='old', iostat=ierr, readonly)
+		if (ierr/=0) then
+			print*, "ERR: calc_filament_statistics_for_input_points"
+			print*, "Input file does not exist or is corrupted: ", file_in
+			stop "Stopping the program..."
+		end if
+		open(newunit=uout,file=file_out)
+		write(uout,fmt='(A)') '# x y z  vmap wmap d_str  dx dy dz'
+		nin=0; ncnt=1
+		do
+			301 continue
+			if (nin>0) ncnt=ncnt+1 ! jatame valja faili paise
+			read(uin,fmt=*,err=301,end=302) crd
+			nin=nin+1 ! valid xyz coordinates
+			!
+			call get_vmap_and_ori_for_point(crd,vm,wm,dori,dst)
+			vm=vm/nrun; wm=wm/nrun
+			!
+			write(uout,fmt='(3F13.5, 3F8.5, 3F12.8)') crd(1:3), vm,wm,dst, dori(1:3)
+		end do
+		302 continue; ncnt=ncnt-1
+		!
+		if (nin/=ncnt) then
+			print*, "WARNING: number of input and output points do not match!"
+			print*, "in, out: ", nin, ncnt
+		end if
+		close(uin)
+		close(uout)
+	end subroutine calc_filament_statistics_for_input_points
 	!
 	subroutine extract_filament_spines(pmin,pmax)
 		implicit none
@@ -274,16 +414,18 @@ contains
 		! spine extraction starts here
 		cnt=0; cntold=0 ! count good starting points
 		do i=1,n ! cycle over gridcells...sorted based on visitmaps
-			k1=vmi(i)%ix; k2=vmi(i)%iy; k3=vmi(i)%iz
-			if ( vmap0(k1,k2,k3)<=0.0 ) cycle ! gridpoint is already visited or spine is nearby
-			vmap0(k1,k2,k3)=0.0 ! nullify
-			if (mod(i,100)==0) then
-				print*, "progress: ", n, " / ", i, cnt
-				if (mod(i,1000)==0 .and. cnt/=cntold) then
+			if (mod(i,1000)==0) then
+				!print*, "progress: ", n, " / ", i, cnt
+				if (mod(i,10000)==0 .and. cnt/=cntold) then
 					!call write_basic_catalogue_to_file('test_filament_spines.txt')
+					call write_basic_catalogue_to_file(c_output_spines//'points.txt')
 					cntold=cnt
 				end if
 			end if
+			!
+			k1=vmi(i)%ix; k2=vmi(i)%iy; k3=vmi(i)%iz
+			if ( vmap0(k1,k2,k3)<=0.0 ) cycle ! gridpoint is already visited or spine is nearby
+			vmap0(k1,k2,k3)=0.0 ! nullify
 			gp(1)=xx(k1); gp(2)=yy(k2); gp(3)=zz(k3)
 			! gp is gridpoint, where filament starts
 			!
@@ -665,15 +807,20 @@ contains
 		deallocate(mask,den,w)
 	end subroutine get_best_orientation
 	!
-	subroutine get_vmap_and_ori_for_point(p,vmap,wmap,dori,dstrength)
+	subroutine get_vmap_and_ori_for_point(p,vmap,wmap,dori,dstrength,only_vmap)
 		implicit none
 		real(rk),dimension(1:3),intent(in):: p
 		real(rk),dimension(1:3),intent(out):: dori
 		real(rk),intent(out):: vmap,wmap,dstrength
 		type(iifast_type),dimension(:,:,:),allocatable:: ic
 		real(rk),dimension(:,:,:),allocatable:: vm,wm
+		logical,optional:: only_vmap
 		call calc_visit_and_orientation_cubes(p,0,0.0_rk,vm,wm,ic)
 		vmap=vm(1,1,1); wmap=wm(1,1,1)
+		if (present(only_vmap) .and. only_vmap) then
+			dori=0.0; dstrength=0.0
+			return
+		end if
 		call get_best_orientation(ic(1,1,1),dori,dstrength)
 	end subroutine get_vmap_and_ori_for_point
 	!

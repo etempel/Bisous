@@ -100,8 +100,8 @@ contains
 	        !
 	        !---- all tests are passed ---
 			dens(ii)=real(nn)/( r2 )
-			dpot1(ii)=-log( dum ) ! hypothesis testing potential: uniform along cylinder
-			dpot2(ii)=-log( dum2 ) ! hypothesis testing potential: locally high density
+			dpot1(ii)=-log( dum ) ! hypothesis testing potential: locally high density
+			dpot2(ii)=-log( dum2 ) ! hypothesis testing potential: uniform along cylinder
 			!dgrad(ii)=dum ! locally high density (it does not work very well...)
 			if (cdata_fixed_radius) exit
 		end do ! cycle over rad samples
