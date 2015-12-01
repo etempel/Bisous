@@ -1,0 +1,37 @@
+unset multiplot
+reset
+set term x11 enhanced size 1200,400
+set output
+
+run=1
+
+set multiplot layout 1,3 
+root='testrun/run0'
+file(n) = root.sprintf("%1.1d/bisous_stats.txt",n)
+n = run
+
+#the cylinder number plot
+set key top right width 3
+set title "The number of cylinders"
+set ylabel "# of cylinders"
+plot file(1) u ($2+$3+$4) tit "All" w lin lc rgb "black" ,\
+file(n) u 2 tit "Connected 0" w lin lc rgb "green" ,\
+file(n) u 3 tit "Connected 1" w lin lc rgb "blue" ,\
+file(n) u 4 tit "Connected 2" w lin lc rgb "red"
+
+#the potential plot
+set key bottom right width 3
+set title "Potentials per cylinder"
+set ylabel "exp(-potential)"
+plot file(n) u (exp(-$7)) tit "Connected 0 potential" w lin lc rgb "green" ,\
+file(n) u (exp(-$8)) tit "Connected 1 potential" w lin lc rgb "blue" ,\
+file(n) u (exp(-$9)) tit "Connected 2 potential" w lin lc rgb "red"
+
+#the temperature plot
+unset logscale y
+set ylabel "Temperature"
+set key top right width 3
+set title "Temperature"
+plot file(n) u 5 tit "Temperature" w lin lc rgb "black"
+
+unset multiplot

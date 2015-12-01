@@ -1,0 +1,16 @@
+reset
+set term x11 enhanced size 500,500
+# x y z u 5=t h r nrcon pot_hyp 10=pot_con pot_hyp_local pot_hyp_uniform
+
+
+fun(x)=exp(-1*x)
+
+set key top left
+set xlabel "exp(-p)"
+
+plot "temp_output_cylinders_small.txt" u (fun($9)):(fun($9))  smooth kdensity title "pot hyp" lw 3, \
+"" u (fun($9-$10)):(fun($9+$10)) smooth kdensity title "total pot" lw 3, \
+"" u (fun($10)):(fun($10))  smooth kdensity title "pot con" lw 3, \
+"" u (fun($11)):(fun($11))  smooth kdensity title "pot hyp local",\
+"" u (fun($12)):(fun($12))  smooth kdensity title "pot hyp uniform"
+
