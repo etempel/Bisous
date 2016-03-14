@@ -10,7 +10,7 @@ module post_processing
 	use galaxies
 	use cubesort
 	use read_cylinders
-	use fits_op
+	!use fits_op
 	use utilities
 	use quicksort
 	use fil_cat

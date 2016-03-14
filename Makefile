@@ -8,23 +8,23 @@
 # ulimit -s shows the current stack size
 
 # Fortran source files and program name:
-PROG = bisous_public
+PROG = bisous_program
 # object files
 OBJ = program.o constants.o parameters.o cylinders.o cubesort.o quicksort.o \
       galaxies.o utilities.o data_term.o interaction_term.o config.o \
 	  operations.o mcmc.o simulation.o preparation.o read_cylinders.o \
-	  fits_op.o post_processing.o fil_catalogue.o
+	  post_processing.o fil_catalogue.o # fits_op.o
 # Variable declaration (Fortran Compilator):
 FC = ifort
-OPT = -xHost -O3 -ipo #-profile-loops=all -profile-loops-report=2 #-profile-functions
+OPT = -O3
 DBG = -g -O0 -error-limit 10 -warn all
-OMP = #-openmp  # -openmp-stubs -openmp-threadprivate
-LIBS =  -lcfitsio #-lrecipes_f90 # -lnest3 -llapack
+OMP = #-openmp
+LIBS =  #-lcfitsio -lrecipes_f90
 # choose flags for compiler
 FLAGS = $(OPT) $(OMP) $(LIBS)
 
 # Variable declaration (system directories):
-DIR_INSTALL = ~/usr/bin
+DIR_INSTALL = ./
 DIR_SRC = ./src
 
 all: $(PROG)
@@ -61,14 +61,12 @@ utilities.o : constants.o
 cubesort.o : constants.o quicksort.o
 quicksort.o : constants.o
 constants.o :
-fits_op.o : constants.o
+#fits_op.o : constants.o
 read_cylinders.o : constants.o cylinders.o utilities.o operations.o
 post_processing.o : constants.o parameters.o cylinders.o galaxies.o cubesort.o read_cylinders.o \
-                    fits_op.o utilities.o fil_catalogue.o
+                    utilities.o fil_catalogue.o # fits_op.o
 fil_catalogue.o : constants.o parameters.o cylinders.o galaxies.o cubesort.o
-#makefil.o : constants.o cubesort.o cylinders.o read_cylinders.o utilities.o
-#fit_minimize2.o : constants.o mynr_amoeba.o
-#mynr_amoeba.o : constants.o
+
 
 
 
