@@ -368,111 +368,111 @@ contains
 		!
 		write(iunit,fmt='(A)') '[general]'
 		write(iunit,fmt=*)
-		write(iunit,fmt='(A," = ",I)') 'main_option',c_main_option
+		write(iunit,fmt='(A," = ",g0)') 'main_option',c_main_option
 		write(iunit,fmt='(A," = ",L)') 'verbose',c_verbose
 		write(iunit,fmt='(A," = ",L)') 'resume',c_resume
 		write(iunit,fmt='(A," = ",L)') 'resume_from_previous_snapshot',c_resume_from_previous_snapshot
-		write(iunit,fmt='(A," = ",F)') 'max_time_hour',real(ctime_max_time)
-		write(iunit,fmt='(A," = ",I)') 'input_type',c_input_type
+		write(iunit,fmt='(A," = ",g0)') 'max_time_hour',real(ctime_max_time)
+		write(iunit,fmt='(A," = ",g0)') 'input_type',c_input_type
 		write(iunit,fmt='(A," = ",A)') 'file_data',fname_data
-		write(iunit,fmt='(A," = ",F)') 'dummy_1',real(c_dummy_1)
+		write(iunit,fmt='(A," = ",g0)') 'dummy_1',real(c_dummy_1)
 		write(iunit,fmt='(A," = ",A)') 'root',c_root
-		write(iunit,fmt='(A," = ",F)') 'scale_factor',real(c_scale_factor)
-		write(iunit,fmt='(A," = ",I)') 'cylarr_size',c_cylarr_size
+		write(iunit,fmt='(A," = ",g0)') 'scale_factor',real(c_scale_factor)
+		write(iunit,fmt='(A," = ",g0)') 'cylarr_size',c_cylarr_size
 		write(iunit,fmt=*); write(iunit,fmt=*)
 		!
 		write(iunit,fmt='(A)') '[mcmc]'
 		write(iunit,fmt=*)
-		write(iunit,fmt='(A," = ",I)') 'nr_cycles',cmcmc_cycles
-		write(iunit,fmt='(A," = ",I)') 'nr_moves',cmcmc_cycle_moves
-		write(iunit,fmt='(A," = ",F)') 'nr_moves_min_frac_con',real(cmcmc_nr_moves_min_frac_con)
-		write(iunit,fmt='(A," = ",I)') 'every_cycle_to_stat',cmcmc_every_cycles_to_stats
-		write(iunit,fmt='(A," = ",I)') 'every_cycle_to_output',cmcmc_every_cycles_to_file
-		write(iunit,fmt='(A," = ",I)') 'cooling_schedule',cmcmc_cooling_schedule
-		write(iunit,fmt='(A," = ",F)') 'temp_initial',real(cmcmc_initial_temp)
-		write(iunit,fmt='(A," = ",F)') 'temp_final',real(cmcmc_final_temp)
-		write(iunit,fmt='(A," = ",I)') 'st_temp_steps',cmcmc_st_temp_steps
-		write(iunit,fmt='(A," = ",F)') 'st_expected_nrcyl_size', real(cmcmc_st_expected_nrcyl_size)
-		write(iunit,fmt='(A," = ",I)') 'nr_cycle_for_tempering',cmcmc_nr_cycle_for_tempering
-		write(iunit,fmt='(A," = ",I)') 'nr_cycle_for_burnin',cmcmc_nr_cycle_for_burnin
-		write(iunit,fmt='(A," = ",F)') 'st_adjust_temp_ladder_coef', real(cmcmc_st_adjust_temp_ladder_coef)
-		write(iunit,fmt='(A," = ",F)') 'st_adjust_temp_ladder_coef_free_min', real(cmcmc_st_adjust_temp_ladder_coef_free_min)
-		write(iunit,fmt='(A," = ",F)') 'st_adjust_temp_ladder_coef_free_max', real(cmcmc_st_adjust_temp_ladder_coef_free_max)
+		write(iunit,fmt='(A," = ",g0)') 'nr_cycles',cmcmc_cycles
+		write(iunit,fmt='(A," = ",g0)') 'nr_moves',cmcmc_cycle_moves
+		write(iunit,fmt='(A," = ",g0)') 'nr_moves_min_frac_con',real(cmcmc_nr_moves_min_frac_con)
+		write(iunit,fmt='(A," = ",g0)') 'every_cycle_to_stat',cmcmc_every_cycles_to_stats
+		write(iunit,fmt='(A," = ",g0)') 'every_cycle_to_output',cmcmc_every_cycles_to_file
+		write(iunit,fmt='(A," = ",g0)') 'cooling_schedule',cmcmc_cooling_schedule
+		write(iunit,fmt='(A," = ",g0)') 'temp_initial',real(cmcmc_initial_temp)
+		write(iunit,fmt='(A," = ",g0)') 'temp_final',real(cmcmc_final_temp)
+		write(iunit,fmt='(A," = ",g0)') 'st_temp_steps',cmcmc_st_temp_steps
+		write(iunit,fmt='(A," = ",g0)') 'st_expected_nrcyl_size', real(cmcmc_st_expected_nrcyl_size)
+		write(iunit,fmt='(A," = ",g0)') 'nr_cycle_for_tempering',cmcmc_nr_cycle_for_tempering
+		write(iunit,fmt='(A," = ",g0)') 'nr_cycle_for_burnin',cmcmc_nr_cycle_for_burnin
+		write(iunit,fmt='(A," = ",g0)') 'st_adjust_temp_ladder_coef', real(cmcmc_st_adjust_temp_ladder_coef)
+		write(iunit,fmt='(A," = ",g0)') 'st_adjust_temp_ladder_coef_free_min', real(cmcmc_st_adjust_temp_ladder_coef_free_min)
+		write(iunit,fmt='(A," = ",g0)') 'st_adjust_temp_ladder_coef_free_max', real(cmcmc_st_adjust_temp_ladder_coef_free_max)
 		!
-		write(iunit,fmt='(A," = ",F)') 'prop_birth',real(cmcmc_prop_birth)
-		write(iunit,fmt='(A," = ",F)') 'prop_death',real(cmcmc_prop_death)
-		write(iunit,fmt='(A," = ",F)') 'prop_change',real(cmcmc_prop_change)
-		write(iunit,fmt='(A," = ",F)') 'prop_birth_connected',real(cmcmc_prop_connected)
-		write(iunit,fmt='(A," = ",F)') 'change_delta_r',real(cmcmc_change_delta_r)
-		write(iunit,fmt='(A," = ",F)') 'change_delta_cosi',real(cmcmc_parallel_cosi_change)
+		write(iunit,fmt='(A," = ",g0)') 'prop_birth',real(cmcmc_prop_birth)
+		write(iunit,fmt='(A," = ",g0)') 'prop_death',real(cmcmc_prop_death)
+		write(iunit,fmt='(A," = ",g0)') 'prop_change',real(cmcmc_prop_change)
+		write(iunit,fmt='(A," = ",g0)') 'prop_birth_connected',real(cmcmc_prop_connected)
+		write(iunit,fmt='(A," = ",g0)') 'change_delta_r',real(cmcmc_change_delta_r)
+		write(iunit,fmt='(A," = ",g0)') 'change_delta_cosi',real(cmcmc_parallel_cosi_change)
 		write(iunit,fmt='(A," = ",L)') 'auto_sampling_volume',cmcmc_auto_sampling_volume
-		write(iunit,fmt='(A," = ",F)') 'auto_volume_multiplier',real(cmcmc_auto_volume_multiplier)
-		write(iunit,fmt='(A," = ",F)') 'auto_samvol_acc',real(cmcmc_auto_samvol_acc)
-		write(iunit,fmt='(A," = ",F)') 'auto_samvol_maxtime',real(cmcmc_auto_samvol_maxtime)
-		write(iunit,fmt='(A," = ",F)') 'volume_fraction',real(cmcmc_volume_fraction)
-		write(iunit,fmt='(A," = ",F)') 'volume_multiplier',real(cmcmc_volume_multiplier)
+		write(iunit,fmt='(A," = ",g0)') 'auto_volume_multiplier',real(cmcmc_auto_volume_multiplier)
+		write(iunit,fmt='(A," = ",g0)') 'auto_samvol_acc',real(cmcmc_auto_samvol_acc)
+		write(iunit,fmt='(A," = ",g0)') 'auto_samvol_maxtime',real(cmcmc_auto_samvol_maxtime)
+		write(iunit,fmt='(A," = ",g0)') 'volume_fraction',real(cmcmc_volume_fraction)
+		write(iunit,fmt='(A," = ",g0)') 'volume_multiplier',real(cmcmc_volume_multiplier)
 		write(iunit,fmt=*); write(iunit,fmt=*)
 		!
 		write(iunit,fmt='(A)') '[data_term]'
 		write(iunit,fmt=*)
-		write(iunit,fmt='(A," = ",I)') 'min_pts',cdata_minpts
+		write(iunit,fmt='(A," = ",g0)') 'min_pts',cdata_minpts
 		write(iunit,fmt='(A," = ",L)') 'use_fixed_radius',cdata_fixed_radius
-		write(iunit,fmt='(A," = ",F)') 'cyl_rad_min',real(cdata_cyl_rad_min)
-		write(iunit,fmt='(A," = ",F)') 'cyl_rad_max',real(cdata_cyl_rad_max)
-		write(iunit,fmt='(A," = ",F)') 'cyl_len_min',real(cdata_cyl_len_min)
-		write(iunit,fmt='(A," = ",F)') 'cyl_len_max',real(cdata_cyl_len_max)
-		write(iunit,fmt='(A," = ",F)') 'cyl_rel_lvsd_min',real(cdata_cyl_rel_lvsd_min)
-		write(iunit,fmt='(A," = ",F)') 'cyl_rel_lvsd_max',real(cdata_cyl_rel_lvsd_max)
-		write(iunit,fmt='(A," = ",F)') 'cyl_shadow_rad',real(cdata_cyl_shadow)
-		write(iunit,fmt='(A," = ",F)') 'hyptest_uniform_den',real(cdata_uniform_dens)
-		write(iunit,fmt='(A," = ",F)') 'hyptest_local_den',real(cdata_local_dens)
-		write(iunit,fmt='(A," = ",F)') 'hyptest_uniform_p_cut',real(cdata_p_uniform_cut)
-		write(iunit,fmt='(A," = ",F)') 'hyptest_local_p_cut',real(cdata_p_dens_cut)
-		write(iunit,fmt='(A," = ",F)') 'variance_coeff_min',real(cdata_coeff_variance_min)
-		write(iunit,fmt='(A," = ",F)') 'variance_coeff_max',real(cdata_coeff_variance_max)
-		write(iunit,fmt='(A," = ",F)') 'hypothesis_coeff_min',real(cdata_coeff_hypothesis_min)
-		write(iunit,fmt='(A," = ",F)') 'hypothesis_coeff_max',real(cdata_coeff_hypothesis_max)
-		write(iunit,fmt='(A," = ",I)') 'nr_of_rad_samples',cdata_nr_of_rad_samples
+		write(iunit,fmt='(A," = ",g0)') 'cyl_rad_min',real(cdata_cyl_rad_min)
+		write(iunit,fmt='(A," = ",g0)') 'cyl_rad_max',real(cdata_cyl_rad_max)
+		write(iunit,fmt='(A," = ",g0)') 'cyl_len_min',real(cdata_cyl_len_min)
+		write(iunit,fmt='(A," = ",g0)') 'cyl_len_max',real(cdata_cyl_len_max)
+		write(iunit,fmt='(A," = ",g0)') 'cyl_rel_lvsd_min',real(cdata_cyl_rel_lvsd_min)
+		write(iunit,fmt='(A," = ",g0)') 'cyl_rel_lvsd_max',real(cdata_cyl_rel_lvsd_max)
+		write(iunit,fmt='(A," = ",g0)') 'cyl_shadow_rad',real(cdata_cyl_shadow)
+		write(iunit,fmt='(A," = ",g0)') 'hyptest_uniform_den',real(cdata_uniform_dens)
+		write(iunit,fmt='(A," = ",g0)') 'hyptest_local_den',real(cdata_local_dens)
+		write(iunit,fmt='(A," = ",g0)') 'hyptest_uniform_p_cut',real(cdata_p_uniform_cut)
+		write(iunit,fmt='(A," = ",g0)') 'hyptest_local_p_cut',real(cdata_p_dens_cut)
+		write(iunit,fmt='(A," = ",g0)') 'variance_coeff_min',real(cdata_coeff_variance_min)
+		write(iunit,fmt='(A," = ",g0)') 'variance_coeff_max',real(cdata_coeff_variance_max)
+		write(iunit,fmt='(A," = ",g0)') 'hypothesis_coeff_min',real(cdata_coeff_hypothesis_min)
+		write(iunit,fmt='(A," = ",g0)') 'hypothesis_coeff_max',real(cdata_coeff_hypothesis_max)
+		write(iunit,fmt='(A," = ",g0)') 'nr_of_rad_samples',cdata_nr_of_rad_samples
 		write(iunit,fmt=*); write(iunit,fmt=*)
 		!
 		write(iunit,fmt='(A)') '[interaction_term]'
 		write(iunit,fmt=*)
-		write(iunit,fmt='(A," = ",F)') 'rad_connection',real(cint_cyl_connection_radius)
-		write(iunit,fmt='(A," = ",F)') 'cos_orthogonal',real(cint_orthogonal_cosi)
-		write(iunit,fmt='(A," = ",F)') 'cos_parallel',real(cint_parallel_cosi)
-		write(iunit,fmt='(A," = ",F)') 'concyl_radius_difference',real(cint_concyl_radius_dif)
-		write(iunit,fmt='(A," = ",F)') 'repulsive_radius_difference',real(cint_repulsive_radius_dif)
+		write(iunit,fmt='(A," = ",g0)') 'rad_connection',real(cint_cyl_connection_radius)
+		write(iunit,fmt='(A," = ",g0)') 'cos_orthogonal',real(cint_orthogonal_cosi)
+		write(iunit,fmt='(A," = ",g0)') 'cos_parallel',real(cint_parallel_cosi)
+		write(iunit,fmt='(A," = ",g0)') 'concyl_radius_difference',real(cint_concyl_radius_dif)
+		write(iunit,fmt='(A," = ",g0)') 'repulsive_radius_difference',real(cint_repulsive_radius_dif)
 		!
 		write(iunit,fmt='(A," = ",L)') 'lg_gamma_use_self_regulation',cint_conn_use_self_regulation
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_0_mean',real(cint_self_conn_0_mean)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_1_mean',real(cint_self_conn_1_mean)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_2_mean',real(cint_self_conn_2_mean)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_0_disp',real(cint_self_conn_0_disp)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_1_disp',real(cint_self_conn_1_disp)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_2_disp',real(cint_self_conn_2_disp)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_0_mean',real(cint_self_conn_0_mean)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_1_mean',real(cint_self_conn_1_mean)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_2_mean',real(cint_self_conn_2_mean)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_0_disp',real(cint_self_conn_0_disp)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_1_disp',real(cint_self_conn_1_disp)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_2_disp',real(cint_self_conn_2_disp)
 		!
 		write(iunit,fmt='(A," = ",L)') 'lg_gamma_use_interval',cint_conn_use_interval
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_0_min',real(cint_conn_0_min)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_1_min',real(cint_conn_1_min)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_2_min',real(cint_conn_2_min)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_0_max',real(cint_conn_0_max)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_1_max',real(cint_conn_1_max)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_2_max',real(cint_conn_2_max)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_0',real(cint_conn_0)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_1',real(cint_conn_1)
-		write(iunit,fmt='(A," = ",F)') 'lg_gamma_2',real(cint_conn_2)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_0_min',real(cint_conn_0_min)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_1_min',real(cint_conn_1_min)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_2_min',real(cint_conn_2_min)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_0_max',real(cint_conn_0_max)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_1_max',real(cint_conn_1_max)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_2_max',real(cint_conn_2_max)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_0',real(cint_conn_0)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_1',real(cint_conn_1)
+		write(iunit,fmt='(A," = ",g0)') 'lg_gamma_2',real(cint_conn_2)
 		write(iunit,fmt=*); write(iunit,fmt=*)
 		!
 		write(iunit,fmt='(A)') '[cmask]'
 		write(iunit,fmt=*)
 		write(iunit,fmt='(A," = ",L)') 'c_cmask_use_boundary_cyls',c_cmask_use_boundary_cyls
 		write(iunit,fmt='(A," = ",L)') 'c_cmask_plim_use',c_cmask_plim_use
-		write(iunit,fmt='(A," = ",F)') 'c_cmask_pmin_x',real(c_cmask_pmin(1))
-		write(iunit,fmt='(A," = ",F)') 'c_cmask_pmin_y',real(c_cmask_pmin(2))
-		write(iunit,fmt='(A," = ",F)') 'c_cmask_pmin_z',real(c_cmask_pmin(3))
-		write(iunit,fmt='(A," = ",F)') 'c_cmask_pmax_x',real(c_cmask_pmax(1))
-		write(iunit,fmt='(A," = ",F)') 'c_cmask_pmax_y',real(c_cmask_pmax(2))
-		write(iunit,fmt='(A," = ",F)') 'c_cmask_pmax_z',real(c_cmask_pmax(3))
+		write(iunit,fmt='(A," = ",g0)') 'c_cmask_pmin_x',real(c_cmask_pmin(1))
+		write(iunit,fmt='(A," = ",g0)') 'c_cmask_pmin_y',real(c_cmask_pmin(2))
+		write(iunit,fmt='(A," = ",g0)') 'c_cmask_pmin_z',real(c_cmask_pmin(3))
+		write(iunit,fmt='(A," = ",g0)') 'c_cmask_pmax_x',real(c_cmask_pmax(1))
+		write(iunit,fmt='(A," = ",g0)') 'c_cmask_pmax_y',real(c_cmask_pmax(2))
+		write(iunit,fmt='(A," = ",g0)') 'c_cmask_pmax_z',real(c_cmask_pmax(3))
 		!
 		write(iunit,fmt='(A)') '[raw_data]'
 		write(iunit,fmt=*)
@@ -480,15 +480,15 @@ contains
 		write(iunit,fmt='(A," = ",A)') 'file_prefix',craw_file_prefix
 		write(iunit,fmt='(A," = ",L)') 'multiple_runs',craw_multiple_runs
 		write(iunit,fmt='(A," = ",A)') 'root_dir_run',craw_root_dir_run
-		write(iunit,fmt='(A," = ",I)') 'run_first',craw_run_first
-		write(iunit,fmt='(A," = ",I)') 'run_last',craw_run_last
-		write(iunit,fmt='(A," = ",I)') 'rs_first',craw_rs_first
-		write(iunit,fmt='(A," = ",I)') 'rs_last',craw_rs_last
-		write(iunit,fmt='(A," = ",I)') 'rs_every',craw_rs_every
-		write(iunit,fmt='(A," = ",F)') 'weight_0',real(craw_weight_0)
-		write(iunit,fmt='(A," = ",F)') 'weight_1',real(craw_weight_1)
-		write(iunit,fmt='(A," = ",F)') 'weight_2',real(craw_weight_2)
-		write(iunit,fmt='(A," = ",F)') 'r_smooth',craw_rsmooth
+		write(iunit,fmt='(A," = ",g0)') 'run_first',craw_run_first
+		write(iunit,fmt='(A," = ",g0)') 'run_last',craw_run_last
+		write(iunit,fmt='(A," = ",g0)') 'rs_first',craw_rs_first
+		write(iunit,fmt='(A," = ",g0)') 'rs_last',craw_rs_last
+		write(iunit,fmt='(A," = ",g0)') 'rs_every',craw_rs_every
+		write(iunit,fmt='(A," = ",g0)') 'weight_0',real(craw_weight_0)
+		write(iunit,fmt='(A," = ",g0)') 'weight_1',real(craw_weight_1)
+		write(iunit,fmt='(A," = ",g0)') 'weight_2',real(craw_weight_2)
+		write(iunit,fmt='(A," = ",g0)') 'r_smooth',craw_rsmooth
 		write(iunit,fmt='(A," = ",L)') 'old_format',craw_old_format
 		!
 		write(iunit,fmt='(A)') '[analyse]'
@@ -498,20 +498,20 @@ contains
 		write(iunit,fmt='(A," = ",A)') 'output_spines',c_output_spines
 		write(iunit,fmt='(A," = ",A)') 'input_points',c_input_points
 		write(iunit,fmt='(A," = ",A)') 'output_points',c_output_points
-		write(iunit,fmt='(A," = ",F)') 'initial_grid_size',real(craw_spine_initial_dx)
-		write(iunit,fmt='(A," = ",F)') 'minimim_visitmap_value',real(craw_spine_min_visitmap_value)
-		write(iunit,fmt='(A," = ",F)') 'spine_location_accuracy',real(craw_spine_location_acc)
-		write(iunit,fmt='(A," = ",I)') 'spine_location_accuracy_tuning',craw_spine_location_acc_tune
-		write(iunit,fmt='(A," = ",F)') 'minimum_orientation_strength',real(craw_spine_min_ori_strength)
-		write(iunit,fmt='(A," = ",F)') 'spine_spacing_rad_frac',real(craw_spine_spacing_rad_frac)
-		write(iunit,fmt='(A," = ",F)') 'spine_spacing_max',real(craw_spine_spacing_max)
-		write(iunit,fmt='(A," = ",I)') 'max_nr_of_fil_spines',craw_max_nr_of_fil_spines
-		write(iunit,fmt='(A," = ",I)') 'max_nr_of_fil_points',craw_max_nr_of_fil_points
+		write(iunit,fmt='(A," = ",g0)') 'initial_grid_size',real(craw_spine_initial_dx)
+		write(iunit,fmt='(A," = ",g0)') 'minimim_visitmap_value',real(craw_spine_min_visitmap_value)
+		write(iunit,fmt='(A," = ",g0)') 'spine_location_accuracy',real(craw_spine_location_acc)
+		write(iunit,fmt='(A," = ",g0)') 'spine_location_accuracy_tuning',craw_spine_location_acc_tune
+		write(iunit,fmt='(A," = ",g0)') 'minimum_orientation_strength',real(craw_spine_min_ori_strength)
+		write(iunit,fmt='(A," = ",g0)') 'spine_spacing_rad_frac',real(craw_spine_spacing_rad_frac)
+		write(iunit,fmt='(A," = ",g0)') 'spine_spacing_max',real(craw_spine_spacing_max)
+		write(iunit,fmt='(A," = ",g0)') 'max_nr_of_fil_spines',craw_max_nr_of_fil_spines
+		write(iunit,fmt='(A," = ",g0)') 'max_nr_of_fil_points',craw_max_nr_of_fil_points
 		!
 		write(iunit,fmt='(A)') '[testing]'
 		write(iunit,fmt=*)
 		write(iunit,fmt='(A," = ",L)') 'constant_dataterm',ctest_constant_dataterm
-		write(iunit,fmt='(A," = ",F)') 'constant_dataterm_value',real(ctest_constant_dataterm_value)
+		write(iunit,fmt='(A," = ",g0)') 'constant_dataterm_value',real(ctest_constant_dataterm_value)
 		write(iunit,fmt='(A," = ",L)') 'no_interactions',ctest_no_interactions
 		write(iunit,fmt=*); write(iunit,fmt=*)
 		!

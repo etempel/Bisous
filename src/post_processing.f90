@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date: 11.11.2015
+! Date: 28.04.2016
 !============
 !
 module post_processing
@@ -215,7 +215,7 @@ contains
 		print*
 		print*, "Calculate filament statistics for points..."
 		print*, "   Filename: ", file_in
-		open(newunit=uin,file=file_in, status='old', iostat=ierr, readonly)
+		open(newunit=uin,file=file_in, status='old', iostat=ierr, action='read')
 		if (ierr/=0) then
 			print*, "ERR: calc_filament_statistics_for_input_points"
 			print*, "Input file does not exist or is corrupted: ", file_in
@@ -259,7 +259,8 @@ contains
 		integer:: irun,icyl,k1,k2,k3
 		real(rk):: radmax,vdum,wdum,dstrength,frad,frad0,dist
 		integer,dimension(1:3):: imin,imax,nmax
-		logical:: inside, testfpt,cntold
+		logical:: inside, testfpt
+		integer:: cntold
 		type vmap_index
 			integer:: ix,iy,iz
 			real(rk):: vis

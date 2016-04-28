@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date: 11.11.2015
+! Date: 28.04.2016
 !============
 !
 module read_cylinders
@@ -36,7 +36,7 @@ contains
 		integer:: i,iunit,k
 		print*, "Write data for plotting: ", dirout
 		do i=1,nrun
-			open(newunit=iunit,file=dirout//'/cyls_bin_'//get_file_counter(i, 5)//'.cyl', form='BINARY')
+			open(newunit=iunit,file=dirout//'/cyls_bin_'//get_file_counter(i, 5)//'.cyl', access='stream', form='unformatted')
 			!open(55,file='testcyl.txt')
 			write(iunit) run(i)%nrcyl
 			!write(55,fmt=*) run(i)%nrcyl

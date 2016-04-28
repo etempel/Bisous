@@ -1,6 +1,6 @@
 !============
 ! Author: Elmo Tempel
-! Date: 11.11.2015
+! Date: 28.04.2016
 !============
 module fil_cat
 	use constants
@@ -45,7 +45,7 @@ contains
 		print*
 		print*, "Calculate spine statistics for points..."
 		print*, "   Filename: ", file_in
-		open(newunit=uin,file=file_in, status='old', iostat=ierr, readonly)
+		open(newunit=uin,file=file_in, status='old', iostat=ierr, action='read')
 		if (ierr/=0) then
 			print*, "ERR: calc_filament_statistics_for_input_points"
 			print*, "Input file does not exist or is corrupted: ", file_in
@@ -106,7 +106,7 @@ contains
 		allocate(fil(1:craw_max_nr_of_fil_spines)); nfil=0
 		!
 		! read data and allocate arrays
-		open(newunit=iunit, file=fname, status='old', iostat=ierr, readonly)
+		open(newunit=iunit, file=fname, status='old', iostat=ierr, action='read')
 		if (ierr/=0) then
 			print*, "ERR: read_filament_catalogue_from_file"
 			print*, "Input file does not exist or is corrupted: ", fname
@@ -129,7 +129,7 @@ contains
 		allocate(fidx%x(1:cnt0),fidx%y(1:cnt0),fidx%z(1:cnt0),fidx%ifil(1:cnt0),fidx%ipt(1:cnt0))
 		cnt=0
 		! read data to array
-		open(newunit=iunit, file=fname, status='old', iostat=ierr, readonly)
+		open(newunit=iunit, file=fname, status='old', iostat=ierr, action='read')
 		if (ierr/=0) stop "ERR: big problem!!!"
 		read(iunit,fmt=*)
 		do n=1,nfil

@@ -1,7 +1,7 @@
 ######################################################
 # Makefile for Fortran programs
 #  Author: Elmo Tempel
-#  Last chaged: (09.02.2015)
+#  Last chaged: (28.04.2016)
 #####################################################
 
 # increase stack size: ulimit -s 65532
@@ -15,8 +15,9 @@ OBJ = program.o constants.o parameters.o cylinders.o cubesort.o quicksort.o \
 	  operations.o mcmc.o simulation.o preparation.o read_cylinders.o \
 	  post_processing.o fil_catalogue.o # fits_op.o
 # Variable declaration (Fortran Compilator):
-FC = ifort
-OPT = -O3
+FC = ifort # for intel fortran compiler
+#FC = gfortran  # for gfortran compiler
+OPT = -O3 #-ffree-line-length-none # -ffree-line-length-none should be commented out for gfortran
 DBG = -g -O0 -error-limit 10 -warn all
 OMP = #-openmp
 LIBS =  #-lcfitsio -lrecipes_f90

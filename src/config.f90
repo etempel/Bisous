@@ -1,6 +1,6 @@
 !========================
 ! Author: Elmo Tempel
-! Date (last changed): 07.11.2014
+! Date (last changed): 28.04.2016
 !========================
 !
 ! Defines functions to handle configuration files
@@ -126,7 +126,7 @@ contains
 		character(len=:),allocatable,intent(out):: cval
 		integer:: iunit,ierr,n
 		character(len=300):: cline
-		open(newunit=iunit,file=cfile,iostat=ierr,status='old',readonly)
+		open(newunit=iunit,file=cfile,iostat=ierr,status='old',action='read')
 		if (ierr/=0) then
 			print*, "ERROR reading configuration file: ", cfile
 			print*, " .. file do not exist/corrupted!"
